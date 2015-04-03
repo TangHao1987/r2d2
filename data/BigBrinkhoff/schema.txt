@@ -1,0 +1,5 @@
+
+
+CREATE TABLE BBFOldTest(type varchar(20), id INTEGER, seq INTEGER, class INTEGER, t INTEGER, x FLOAT, y FLOAT, speed FLOAT, nextX INTEGER, nextY INTEGER)
+
+.separator \t
