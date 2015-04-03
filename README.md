@@ -1,4 +1,4 @@
-“Semi-Lazy” Trajectory Prediction Package
+Semi-Lazy Trajectory Prediction Package
 ===
 
 ###Title
