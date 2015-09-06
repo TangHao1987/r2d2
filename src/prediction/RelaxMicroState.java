@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Map.Entry;
 
 public class RelaxMicroState {
-	private static int RELAX_MICROSTATE_ID=-1;
+
 	private ArrayList<Entry<Long,GridLeafTraHashItem>> Ltratime;
 	
 	private double LSX;//x-the sum the position of all cells
@@ -17,7 +17,7 @@ public class RelaxMicroState {
 	
 	public RelaxMicroState(){
 		
-		Ltratime=new ArrayList<Entry<Long,GridLeafTraHashItem>>();
+		Ltratime=new ArrayList<>();
 		
 		LSX=0;
 		LSY=0;
@@ -59,30 +59,13 @@ public class RelaxMicroState {
 		
 		return c;
 	}
-	
-	/**
-	 * the distance from center to a point
-	 * @param txi
-	 * @param tyi
-	 * @return
-	 */
 	public double getDisCenter(double txi, double tyi) {
 		// TODO Auto-generated method stub
 		double c[]=getCenter();
-		
 		double p[]={txi,tyi};
-		
-		double d=Math.sqrt((c[0]-p[0])*(c[0]-p[0])+(c[1]-p[1])*(c[1]-p[1]));
-		
-		return d;
+        return Math.sqrt((c[0]-p[0])*(c[0]-p[0])+(c[1]-p[1])*(c[1]-p[1]));
 	}
-	
-	/**
-	 * generate a set of micro state from relax micro state
-	 * @param r
-	 * @param inG
-	 * @return
-	 */
+
 	public ArrayList<MicroState> generateMics(double r,Grid inG){
 		if(null==this.Ltratime||0==n){
 			return null;

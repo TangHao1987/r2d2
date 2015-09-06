@@ -7,7 +7,7 @@ public  class MapLoc2Grid {
 	private static double lng0;
 	private static double step0;
 	
-	public static Point transferGrid(double lat,double lng){
+	public static Point getPoint(double lat, double lng){
 		double offx=lat-lat0;
 		double offy=lng-lng0;
 	

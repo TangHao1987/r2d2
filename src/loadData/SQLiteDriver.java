@@ -26,10 +26,8 @@ public class SQLiteDriver {
 		String conStr="jdbc:sqlite:"+db;
 		 conn = DriverManager.getConnection(conStr);
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -39,10 +37,9 @@ public class SQLiteDriver {
 	 */
 	public static void closeDB(){
 		try {
-		conn.close();
-		rs.close();
+            conn.close();
+            rs.close();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -57,28 +54,17 @@ public class SQLiteDriver {
 		
 		 rs = stat.executeQuery(sql);
 		}catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-	
-	/**
-	 * 
-	 * @param db
-	 * @param timeStart
-	 * @param timeEnd
-	 * @return there are five elements, and they are [minLat,minLng,maxLat,maxLng,num of taxi]
-	 */
+
 	public static double[] getMaxMinNum(String db,String table,String timeStart,String timeEnd){
 		double[] res=new double[5];
-		
 		try {
 			openDB( db);
 			 String sql="select min(lat),min(lng),max(lat),max(lng),count(distinct  id) from "+table
 			 + " where time>time(\""+timeStart+"\") and time<time(\""+timeEnd+"\")";
-			 
 			 exeSQL(sql);
-			 
 			 while(rs.next()){
 				 res[0]=rs.getDouble(1);
 				 res[1]=rs.getDouble(2);
@@ -88,7 +74,6 @@ public class SQLiteDriver {
 			 }
 			 closeDB();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return res;
@@ -110,9 +95,9 @@ public class SQLiteDriver {
 	}
 	
 	public static int[] getMITTraStartEndId(String db,String table, int timeStart, int timeEnd){
-		int[] res= new int[2];;
+		int[] res= new int[2];
 		try {
-			openDB( db);
+			openDB(db);
 			 String sql="select min(id),max(id) from "+table
 			 + " where t>"+timeStart+" and t<"+timeEnd+"";
 			 
@@ -124,17 +109,13 @@ public class SQLiteDriver {
 			 }
 			 closeDB();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			res=null;
 			e.printStackTrace();
 		}
-		
-		
 		return res;
 	}
 	
 	public static int getSeconds(String str){
-
 		String[] resStr=str.split(":|,");
 		int h=Integer.parseInt(resStr[0]);
 		int m=Integer.parseInt(resStr[1]);
@@ -142,15 +123,4 @@ public class SQLiteDriver {
 		
 		return h*3600+m*60+s;
 	}
-	
-	
-	
-
-	
-	public static void main(String[] args) throws Exception {
-		
-		
-	}
-		
-	
 }

@@ -130,8 +130,8 @@ public class MoveObjCacheBBFOld {
 				 t2=Configuration.T_Sample+t1;
 
 				//transfer to the coordination in x-y grid map
-				java.awt.Point p2=MapLoc2Grid.transferGrid(lat2,lng2);
-				java.awt.Point p1=MapLoc2Grid.transferGrid(lat1, lng1);
+				java.awt.Point p2=MapLoc2Grid.getPoint(lat2, lng2);
+				java.awt.Point p1=MapLoc2Grid.getPoint(lat1, lng1);
 				
 
 				

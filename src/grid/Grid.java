@@ -28,56 +28,25 @@ public class Grid implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = -9215443852086117712L;
-
 	private GridCell root;//the root of grid(i.e. quad-tree)
-
 	private int maxIndex;//the upper bound of the grid index,this stores the maximum possible cellx and celly coordinations in the grid
-
 	private IStorageManager g_Storage;
 	private int curTime;
-	
 	private double[][] mask;//define the mask for density update
 	private double maskSum;
 
 	QueryCache qc;
-	
 
-	//construct parameter
-
-	
 	public Grid() {
-			
-		//set up the disk storage manager
 		PropertySet ps=new PropertySet();
-		Boolean b = new Boolean(true);
-		ps.setProperty("Overwrite", b);//overwrite the file if it exists.
+		ps.setProperty("Overwrite", true);//overwrite the file if it exists.
 		ps.setProperty("FileName", Configuration.GridFile + ".grid");// .idx and .dat extensions will be added.
-		// specify the page size. Since the index may also contain user defined data
-		// there is no way to know how big a single node may become. The storage manager
-		// will use multiple pages per node if needed. Off course this will slow down performance.
 		ps.setProperty("PageSize", Configuration.PageSize);
-		
 		qc=null;//as default, QueryCache is closed
 		
 		initialGrid(ps);
 	}
-	
-	public int getCellNum(int x0, int y0, int x1, int y1){
-		int count = 0;
-		for(int i=x0;i<x1;i++){
-			for(int j=y0;j<y1;j++){
-				if(this.getGridCell(i, j)!=null){
-					count++;
-				}
-			}
-		}
-		return count;
-	}
-	public int getSizeof(){
-		return root.getSizeOf();
-		
-	}
-	
+
 	public void closeQC(){
 		qc=null;
 	}
@@ -85,23 +54,7 @@ public class Grid implements Serializable {
 	public void openQC(){
 		qc=new QueryCache();
 	}
-	
-	public boolean clearQC(){
-		if(null==qc) return false;
-		qc.clear();
-		return true;
-	}
-	
-	public int getQCHitcount(){
-		if(null==qc) return -1;
-		return qc.hitCount;
-	}
-	
-	public Grid(PropertySet ps){
-		initialGrid(ps);	//
-	}
-	
-	
+
 	public void initialGrid(PropertySet ps){
 		setDefaultMask();//set the mask for update density
 		curTime=0;
@@ -192,37 +145,21 @@ public class Grid implements Serializable {
 	 * the default of mask, which is an estimation of Gaussian Distribution
 	 */
 	private void setDefaultMask(){
-		mask=new double[3][3];
-		mask[0][0]=1;
-		mask[0][1]=2;
-		mask[0][2]=1;
-		
-		mask[1][0]=2;
-		mask[1][1]=8;
-		mask[1][2]=2;
-		
-		mask[2][0]=1;
-		mask[2][1]=2;
-		mask[2][2]=1;
-		
-		maskSum=20.;
-		
-		for(int i=0;i<=2;i++){
-			for(int j=0;j<=2;j++){
+        mask = new double[][]{
+                new double[]{1, 2, 1},
+                new double[]{2, 8, 2},
+                new double[]{1, 2, 1}
+
+        };
+
+		maskSum=20;
+		for(int i=0;i<mask.length;i++){
+			for(int j=0;j<mask[i].length;j++){
 				mask[i][j]/=maskSum;
 			}
 		}
 	}
-	
 
-
-	
-	/**
-	 * increase the density of the GridCell, with delta, x and y corresponding to the cell location
-	 * @param x
-	 * @param y
-	 * @param delta
-	 */
 	public void increaseDensityDirect(int x,int y,double delta){
 		//if out of boundary, return immediately
 		if (x < 0||y<0||x>=this.maxIndex||y>=this.maxIndex)

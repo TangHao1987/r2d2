@@ -86,9 +86,9 @@ public class GFStatesItem {
 	 */
 	private int compTraSumNum(){
 		int sum=0;
-		for(int i=0;i<macs.size();i++){
-			sum+=macs.get(i).LT.size();
-		}
+        for (MacroState mac : macs) {
+            sum += mac.LT.size();
+        }
 		return sum;
 	}
 

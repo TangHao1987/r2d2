@@ -17,7 +17,7 @@ import prediction.MacroState;
 import prediction.Predictor;
 import prediction.StateGridFilter;
 
-import visulalization.VisGrid;
+import visulalization.VisGridCanvas;
 
 public class Demo {
 
@@ -33,18 +33,9 @@ public class Demo {
 	public static void expPredictionErr_R2D2(){
 		
 		Predictor pdr=new Predictor();
-
-		BBFOldLoad tl=new BBFOldLoad();
-		
 		Configuration.BITS_PER_GRID=4;
 		Configuration.MAX_LEVEL=3;
-		Configuration.GridDivided=2048;
-		
 
-		Configuration.BBFOldXMin=292.0;
-		Configuration.BBFOldYMin=3935.0;
-		Configuration.BBFOldXMax=23056.0;
-		Configuration.BBFOldYMax=30851.0;
 	
 		Configuration.T_period=200;
 		
@@ -73,13 +64,13 @@ public class Demo {
 		
 		int sampleStart=0;
 		int sampleEnd=15;
-		tl.setSample(sampleNum, sampleLen,sampleStart,sampleEnd);
+
+        BBFOldLoad tl=new BBFOldLoad(sampleNum, sampleLen,sampleStart,sampleEnd);
 		System.out.println("#start loading data and sample queries from data/BigBrinkhoff/bigBrinkhoff.db tablename: BBFOldTest");
 		Grid g=tl.Load2Grid("data/BigBrinkhoff/bigBrinkhoff.db", "BBFOldTest",timeStart ,timeEnd);
 		System.out.println("#finished loading data");
-		
 		System.out.println("#show part of the map");
-		VisGrid vg=VisGrid.visGridPart(g, 0, 0,Configuration.GridDivided,Configuration.GridDivided);//show a map
+		new VisGridCanvas(g, 0, 0, Configuration.GRID_DIVIDED, Configuration.GRID_DIVIDED);//show a map
 		
 		HashMap<Integer, ArrayList<RoICell>> gridRes=tl.getGridSampleList();
 		

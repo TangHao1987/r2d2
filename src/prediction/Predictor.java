@@ -1,34 +1,17 @@
 package prediction;
 
-import java.awt.Point;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map.Entry;
-import java.util.PriorityQueue;
-import java.util.Queue;
 
-
-
-import utl.kdtree.KDTree;
-import utl.kdtree.KeyDuplicateException;
-import utl.kdtree.KeyMissingException;
-import utl.kdtree.KeySizeException;
-import visulalization.GridPainter;
-import visulalization.VisGrid;
 
 import grid.Configuration;
 import grid.Grid;
-import grid.GridCell;
 import grid.GridLeafTraHashItem;
 import grid.RoICell;
 
@@ -44,25 +27,15 @@ public class Predictor {
 	
 	
 	public Predictor(){
-		
+
 	//	g=inG;
 	}
-	
-	/**
-	 * @param startSet : first initialize query result from grid
-	 * @param g   ： grid
-	 * @param p   : maximum possible prediction path probability
-	 * @param minDelta : the minimum delta for MAP, termination for MAP
-	 * @param r   : the threshold form micro state
-	 * @return
-	 */
-	public StateGridFilter PathPrediction(
+
+    public StateGridFilter PathPrediction(
 			ArrayList<Entry<Long, GridLeafTraHashItem>> startSet, Grid g,
 			double p, double minDelta, double r) {
 		//System.out.println("for debug:print path conf threashold P:"+p+" minDelta:"+minDelta+" startSet size:"+startSet.size());
-		return PathPrediction(
-				startSet,  g,
-				 p,  minDelta,  r, Integer.MAX_VALUE, null);
+		return PathPrediction(startSet,  g, p,  minDelta,  r, Integer.MAX_VALUE, null);
 	}
 	
 	public  StateGridFilter PathPrediction(
@@ -79,34 +52,21 @@ public class Predictor {
 			double p, double minDelta, double r, ArrayList<StatesDendrogram> outSDList){
 		
 		return PathPrediction(
-				startSet, g,
-				p, minDelta, r,Integer.MAX_VALUE, outSDList);
+				startSet, g, p, minDelta, r,Integer.MAX_VALUE, outSDList);
 	}
-	
-	/**
-	 * 
-	 * @param startSet
-	 * @param g
-	 * @param p
-	 * @param minDelta
-	 * @param r
-	 * @param outSDList: if outSDList ==null, just ignore it, else, add each dendrogram into this list
-	 * @return
-	 */
+
+
 	private  StateGridFilter PathPrediction(
-			ArrayList<Entry<Long, GridLeafTraHashItem>> startSet, Grid g,
+			ArrayList<Entry<Long, GridLeafTraHashItem>> startSet, Grid grid,
 			double p, double minDelta, double r,int pathMaxLen, ArrayList<StatesDendrogram> outSDList){
-
 		int time_k = 0;// count the future time
-		long dtStart = 0, dtEnd = 0;
-
 		StateGridFilter sgf = new StateGridFilter();//
-		AgglomerativeCluster ac = new AgglomerativeCluster(g);
+		AgglomerativeCluster ac = new AgglomerativeCluster(grid);
 
 		// first dendrogram got by query result
-		dtStart = System.currentTimeMillis();
+        long dtStart = System.currentTimeMillis();
 		StatesDendrogram sd = ac.getDendrogram(startSet, r);
-		dtEnd = System.currentTimeMillis();
+        long dtEnd = System.currentTimeMillis();
 		Configuration.time_cluster+=dtEnd-dtStart;
 		
 		if(null!=outSDList){											 
@@ -130,7 +90,7 @@ public class Predictor {
 			
 			// get relax micro state from grid
 			dtStart = System.currentTimeMillis();
-			ArrayList<RelaxMicroState> rf = g.forwardQueryMics(sd.micsLevel);
+			ArrayList<RelaxMicroState> rf = grid.forwardQueryMics(sd.micsLevel);
 			dtEnd = System.currentTimeMillis();
 			Configuration.time_retrieve+=dtEnd-dtStart;
 			//System.out.println("for debug time_k:"+time_k+" RelaxMicroStates size:"+rf.size());
@@ -140,7 +100,7 @@ public class Predictor {
 			sd = ac.getDendrogramRelaxMics(rf, r);// get dendrogram
 			dtEnd = System.currentTimeMillis();
 			Configuration.time_cluster+=dtEnd-dtStart;
-			
+
 			
 			if(null!=outSDList){
 			outSDList.add(sd);

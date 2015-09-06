@@ -17,15 +17,15 @@ public class GFStates {
 	double max_delta;
 	
 	public GFStates(){
-		gfsList=new ArrayList<GFStatesItem>();
+		gfsList=new ArrayList<>();
 		gfsList.add(new GFStatesItem());
 		
-		delta=new ArrayList<Double[]>();
+		delta=new ArrayList<>();
 		Double[]delta_0=new Double[1];
 		delta_0[0]=1.;
 		delta.add(delta_0);
 		
-		psi=new ArrayList<Integer[]>();
+		psi=new ArrayList<>();
 		Integer[] psi_0=new Integer[1];
 		psi_0[0]=0;
 		psi.add(psi_0);
