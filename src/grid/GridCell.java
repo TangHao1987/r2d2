@@ -33,46 +33,17 @@ public class GridCell implements Serializable {
 
 	private void initialGrid() {
 		int w = (int) Math.pow(2, Configuration.BITS_PER_GRID);
-		int l = w;
-		gridArray = new GridCell[w][l];
+        gridArray = new GridCell[w][w];
 
 		for (int i = 0; i < w; i++) {
-			gridArray[i] = new GridCell[l];
+			gridArray[i] = new GridCell[w];
 		}
 
 		for (int i = 0; i < w; i++) {
-			for (int j = 0; j < l; j++) {
+			for (int j = 0; j < w; j++) {
 				gridArray[i][j] = null;
 			}
 		}
-	}
-
-	public int getSizeOf() {
-		int size=-1;
-		int leafSize=0;
-		if(null!=gridLeafEntry){
-			leafSize=gridLeafEntry.getSizeOf();
-		}
-		int arraySize=0;
-		if(null!=this.gridArray){
-			
-			int w = (int) Math.pow(2, Configuration.BITS_PER_GRID);
-			int l = w;
-			
-			for (int i = 0; i < w; i++) {
-				for (int j = 0; j < l; j++) {
-					if(null!=gridArray[i][j]){
-						arraySize+=gridArray[i][j].getSizeOf();
-					}
-				}
-			}
-		}
-		
-		int othersizeof=8+4+4+4;
-		
-		size=leafSize+arraySize+othersizeof;
-		
-		return size;
 	}
 
 }

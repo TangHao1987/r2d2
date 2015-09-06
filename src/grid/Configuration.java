@@ -14,6 +14,8 @@ public class Configuration {
     public static final double MAX_LATITUDE =23056.0;
     public static final double MAX_LONGITUDE =30851.0;
 
+    //the support of reference trajectories. How many minimum trajectories are required
+    public static final int TraSupport=1;
     //for time profiling
 	public static int time_retrieve = 0;
 	public static double time_cluster = 0;
@@ -30,8 +32,7 @@ public class Configuration {
 	
 	public static int BrinkConstraintRoI=3; 
 	public static double BrinkThreshold=0.1;
-	//the support of reference trajectories. How many minimum trajectories are required 
-	public static int TraSupport=5;
+
 	
 	public static double cellRadius=Math.sqrt(2)/2;//use to compute the micro state, each cell has a radius sqrt(2)/2
 	public static double MicroStateRadius=4*cellRadius;

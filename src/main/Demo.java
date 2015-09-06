@@ -39,8 +39,7 @@ public class Demo {
 	
 		Configuration.T_period=200;
 		
-		Configuration.BrinkConstraintRoI=16; 
-		Configuration.TraSupport=1;
+		Configuration.BrinkConstraintRoI=16;
 		
 		//define parameter related with MacroState and MicroState 
 		Configuration.MaxRadius=5000; //maximum size of state, not import parameters. It is defined on real distance
@@ -89,23 +88,17 @@ public class Demo {
 		
 		System.out.println("#start prediction and statistic the prediction rate and prediction error");
 		while(lItr.hasNext()){
-			
-			long dtStart=0,dtEnd=0;
 			Entry<Integer,ArrayList<RoICell>> gridItem=lItr.next();
-		
 			ArrayList<RoICell> rcGridList=gridItem.getValue();
-			
-			ArrayList<RoICell> ref=new ArrayList<RoICell>(rcGridList.subList(refTime-DBBackStep+1, refTime+1));
-	
-			dtStart=System.currentTimeMillis();
-			 ArrayList<Entry<Long, GridLeafTraHashItem>>  testBres=g.queryRangeTimeSeqCells(ref);
+			ArrayList<RoICell> ref=new ArrayList<>(rcGridList.subList(refTime-DBBackStep+1, refTime+1));
+            ArrayList<Entry<Long, GridLeafTraHashItem>>  testBres=g.queryRangeTimeSeqCells(ref);
+
 			 if(null==testBres||testBres.size()<Configuration.TraSupport) continue;
 			
 			 StateGridFilter sgf=pdr.PathPrediction(testBres,g,Configuration.ProDown,Configuration.MAPPro,Configuration.MicroStateRadius);
 			 ArrayList<MacroState> mp=sgf.gfStates.getMacroStatePath();
-			  dtEnd=System.currentTimeMillis();
 
-				 int len=mp.size()-1;
+            int len=mp.size()-1;
 				
 				 for(int i=1;i<=len;i++){
 					 
