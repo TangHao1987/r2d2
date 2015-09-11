@@ -25,12 +25,6 @@ public class AgglomerativeCluster {
 		g=inG;
 	}
 
-	/**
-	 * 
-	 * @param queryRes: a set of query result form grid
-	 * @param r
-	 * @return
-	 */
 	public StatesDendrogram getDendrogram(ArrayList<Entry<Long, GridLeafTraHashItem>> queryRes,
 			double r) {
 
@@ -149,7 +143,7 @@ public class AgglomerativeCluster {
 	 * @param r
 	 * @return a set of micro state, which is store in ArrayList
 	 */
-	private ArrayList<MicroState> InitialMicroState(
+	public ArrayList<MicroState> InitialMicroState(
 			ArrayList<Entry<Long, GridLeafTraHashItem>> queryRes, double r) {
 
 		// ArrayList<Entry<Long,GridLeafTraHashItem>>
@@ -160,7 +154,7 @@ public class AgglomerativeCluster {
 		ArrayList<MicroState> res = null;
 
 		// initialize the k-d tree. It is a quad-tree in fact
-		KDTree<MicroState> kt = new KDTree<MicroState>(2);
+		KDTree<MicroState> kt = new KDTree<>(2);
 
 		if (null==queryRes||0 == queryRes.size())
 			return res;
@@ -177,14 +171,12 @@ public class AgglomerativeCluster {
 			res = mergeMics(inMics, kt, r);// merge thus micro states to maximum
 											// micro states
 
-		} catch (KeySizeException e) {
+		} catch (KeySizeException | KeyMissingException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (KeyMissingException e) {
 			e.printStackTrace();
 		}
 
-		return res;// return result
+        return res;// return result
 	}
 	
 	/**
@@ -327,25 +319,25 @@ public class AgglomerativeCluster {
 			return null;
 
 		// initialize the micro state, consider each cell as a micro state
-		for (int i = 0; i < queryRes.size(); i++) {
-			// get cell
-			int txi = queryRes.get(i).getValue().getCellX();
-			int tyi = queryRes.get(i).getValue().getCellY();
-			GridCell tgci=g.getGridCell(txi, tyi);
+        for (Entry<Long, GridLeafTraHashItem> queryRe : queryRes) {
+            // get cell
+            int txi = queryRe.getValue().getCellX();
+            int tyi = queryRe.getValue().getCellY();
+            GridCell tgci = g.getGridCell(txi, tyi);
 
-			// consider each cell as a state
-			// idCount++;
-			MicroState ms = new MicroState(Configuration.getStateId());
-			 ms.addPoint(txi,tyi , tgci.density,queryRes.get(i)); 
+            // consider each cell as a state
+            // idCount++;
+            MicroState ms = new MicroState(Configuration.getStateId());
+            ms.addPoint(txi, tyi, tgci.density, queryRe);
 
-			// insert into k-d tree and hashmap
-			this.KDTreeHashInsertMic(ms, null, outkt);
+            // insert into k-d tree and hashmap
+            this.KDTreeHashInsertMic(ms, null, outkt);
 
-			// insert into k-d tree
-			// kt.replaceInsert(ms.getCenter(), ms);
-			// put into label hashmap
-			// ml.put(ms.id, ms);
-		}
+            // insert into k-d tree
+            // kt.replaceInsert(ms.getCenter(), ms);
+            // put into label hashmap
+            // ml.put(ms.id, ms);
+        }
 		if(outkt.size()>2){
 		ArrayList<MicroState> inMics = outkt.toArrayListValue();
 
@@ -1011,13 +1003,12 @@ public class AgglomerativeCluster {
 		
 		System.out.println(MacroState.getRadius(res.get(0), res.get(1)));
 		System.out.println(MacroState.getRadius(res.get(1), res.get(2)));
-		
-		//System.out.println(res.size());
-		query=new ArrayList<Entry<Long,GridLeafTraHashItem>>(hm.entrySet());
+
+		query=new ArrayList<>(hm.entrySet());
 		
 		//ArrayList<ArrayList<MacroState>> macRes=ac.getDendrogram(query, 2.58/2);
 		StatesDendrogram sd=ac.getDendrogram(query, 2.59/4);
-		System.out.println(sd.macsTree.size());
+		System.out.println(sd.getMacsTree().size());
 	}
 	
 }

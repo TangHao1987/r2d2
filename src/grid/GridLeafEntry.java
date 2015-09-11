@@ -126,7 +126,6 @@ public class GridLeafEntry  implements Serializable{
 	/**
 	 * query recent trajectories point start or larter than forwardTiemStamp
 	 * this is down(towards old data) query
-	 * @param deepTime
 	 * @return
 	 */
 	public ArrayList<Entry<Long,GridLeafTraHashItem>> queryTimeRangeForward(int forwardTimeStamp){
@@ -135,13 +134,12 @@ public class GridLeafEntry  implements Serializable{
 				=new ArrayList<Entry<Long,GridLeafTraHashItem>>();
 		
 		//all traId which are update after queryTime are included
-		int queryTime=forwardTimeStamp;//the last query time
-		
-		//if queryTime is smaller than pageQueryStartTime, we need to read one more page
+
+        //if queryTime is smaller than pageQueryStartTime, we need to read one more page
 		int pageQueryStartTime=this.curPageStartTime;
 		
 		//query result in traHash
-		queryTimeRangePerTraHash(traHash,queryTime,res);
+		queryTimeRangePerTraHash(traHash, forwardTimeStamp,res);
 		
 		try{
 			
@@ -153,7 +151,7 @@ public class GridLeafEntry  implements Serializable{
 		
 		//queryTime<pageQueryStartTime: if queryTime is smaller than pageQueryStartTime, we need to read one more page
 		// idx>=0: there is no pages in disk, return immediately
-		while(queryTime<pageQueryStartTime&&idx>=0){
+		while(forwardTimeStamp <pageQueryStartTime&&idx>=0){
 			//get item
 			PageStartTimeItem pstItem=pageStartTimes.get(idx);
 			 assert( pstItem!=null ) :"GridLeafEntry: wrong pageStartTimes ";
@@ -166,7 +164,7 @@ public class GridLeafEntry  implements Serializable{
 			
 			
 			//query result in pageHashTra
-			queryTimeRangePerTraHash(pageHashTra,queryTime,res);
+			queryTimeRangePerTraHash(pageHashTra, forwardTimeStamp,res);
 
 		};
 		}catch(Exception e){
@@ -178,8 +176,6 @@ public class GridLeafEntry  implements Serializable{
 	
 	/**
 	 * query the next cell of traId and time in current cell
-	 * @param traId
-	 * @param time
 	 */
 	public GridLeafTraHashItem queryTraIdTime(int inTraId,int inTraTime){
 		

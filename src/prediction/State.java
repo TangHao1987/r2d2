@@ -127,22 +127,20 @@ public class State {
 		else{
 			double ltSum=0;
 			Set<Entry<Integer,RoICell>> LTSet=LT.entrySet();
-			Iterator<Entry<Integer,RoICell>> LTSetItr=LTSet.iterator();
-			while(LTSetItr.hasNext()){
-				Entry<Integer,RoICell> LTSetItem=LTSetItr.next();//one traId with cell
-				//Integer lt=null;
-				Integer lt=Configuration.lifetimeMap.get(LTSetItem.getKey());//get the lifetime
-				Configuration.fullcount++;//for debug
-				if(null==lt){//if empty, just 1
-					ltSum+=1;
-					Configuration.lossCount++;//for debug
-				} else{
-					
-					double ltWeight=Math.pow(Configuration.doSelfParameter, lt-1);//Exponentially increase
-					//double ltWeight=lt;
-					ltSum+=ltWeight;
-				}
-			}
+            for (Entry<Integer, RoICell> LTSetItem : LTSet) {
+                //Integer lt=null;
+                Integer lt = Configuration.lifetimeMap.get(LTSetItem.getKey());//get the lifetime
+                Configuration.fullcount++;//for debug
+                if (null == lt) {//if empty, just 1
+                    ltSum += 1;
+                    Configuration.lossCount++;//for debug
+                } else {
+
+                    double ltWeight = Math.pow(Configuration.doSelfParameter, lt - 1);//Exponentially increase
+                    //double ltWeight=lt;
+                    ltSum += ltWeight;
+                }
+            }
 			return ltSum;
 		}
 	}
@@ -159,26 +157,24 @@ public class State {
 			double ltSum=0;
 			
 			Set<Entry<Integer,RoICell>> LTSet=LT.entrySet();
-			Iterator<Entry<Integer,RoICell>> LTSetItr=LTSet.iterator();
-			while(LTSetItr.hasNext()){
-				Entry<Integer,RoICell> LTSetItem=LTSetItr.next();//one traId with cell
-				//Integer lt=null;
-				Integer lt=Configuration.lifetimeMap.get(LTSetItem.getKey());//get the lifetime
-				Configuration.fullcount++;//for debug
-				if(null==lt){//if empty, just 1
-					LSXlt+=LTSetItem.getValue().roiX;
-					LSYlt+=LTSetItem.getValue().roiY;
-					ltSum+=1;
-					Configuration.lossCount++;//for debug
-				} else{
-					
-					double ltWeight=Math.pow(Configuration.doSelfParameter, lt-1);//Exponentially increase
-					//double ltWeight=lt;
-					LSXlt+=LTSetItem.getValue().roiX*ltWeight;
-					LSYlt+=LTSetItem.getValue().roiY*ltWeight;
-					ltSum+=ltWeight;
-				}
-			}
+        for (Entry<Integer, RoICell> LTSetItem : LTSet) {
+            //Integer lt=null;
+            Integer lt = Configuration.lifetimeMap.get(LTSetItem.getKey());//get the lifetime
+            Configuration.fullcount++;//for debug
+            if (null == lt) {//if empty, just 1
+                LSXlt += LTSetItem.getValue().roiX;
+                LSYlt += LTSetItem.getValue().roiY;
+                ltSum += 1;
+                Configuration.lossCount++;//for debug
+            } else {
+
+                double ltWeight = Math.pow(Configuration.doSelfParameter, lt - 1);//Exponentially increase
+                //double ltWeight=lt;
+                LSXlt += LTSetItem.getValue().roiX * ltWeight;
+                LSYlt += LTSetItem.getValue().roiY * ltWeight;
+                ltSum += ltWeight;
+            }
+        }
 			c[0]=LSXlt/ltSum;
 			c[1]=LSYlt/ltSum;
 			
@@ -199,12 +195,10 @@ public class State {
 			return;
 		}
 		Set<Entry<Integer,RoICell>> LTBSet=LTB.entrySet();
-		Iterator<Entry<Integer,RoICell>> LTBSetItr=LTBSet.iterator();
-		
-		while(LTBSetItr.hasNext()){
-			Entry<Integer,RoICell> LTBItem=LTBSetItr.next();
-			LTA.put(LTBItem.getKey(), LTBItem.getValue());
-		}
+
+        for (Entry<Integer, RoICell> LTBItem : LTBSet) {
+            LTA.put(LTBItem.getKey(), LTBItem.getValue());
+        }
 	}
 	
 	/**

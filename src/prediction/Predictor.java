@@ -21,19 +21,13 @@ import grid.RoICell;
  *
  */
 public class Predictor {
-	
-	//Grid g;//grid map structure
-	
-	
-	
-	public Predictor(){
 
-	//	g=inG;
+	public Predictor(){
 	}
 
-    public StateGridFilter PathPrediction(
-			ArrayList<Entry<Long, GridLeafTraHashItem>> startSet, Grid g,
-			double p, double minDelta, double r) {
+    public StateGridFilter predictPath(
+            ArrayList<Entry<Long, GridLeafTraHashItem>> startSet, Grid g,
+            double p, double minDelta, double r) {
 		//System.out.println("for debug:print path conf threashold P:"+p+" minDelta:"+minDelta+" startSet size:"+startSet.size());
 		return PathPrediction(startSet,  g, p,  minDelta,  r, Integer.MAX_VALUE, null);
 	}
@@ -56,8 +50,7 @@ public class Predictor {
 	}
 
 
-	private  StateGridFilter PathPrediction(
-			ArrayList<Entry<Long, GridLeafTraHashItem>> startSet, Grid grid,
+	private  StateGridFilter PathPrediction(ArrayList<Entry<Long, GridLeafTraHashItem>> startSet, Grid grid,
 			double p, double minDelta, double r,int pathMaxLen, ArrayList<StatesDendrogram> outSDList){
 		int time_k = 0;// count the future time
 		StateGridFilter sgf = new StateGridFilter();//
@@ -76,7 +69,7 @@ public class Predictor {
 		time_k++;
 		// prediction at time k==1
 		dtStart = System.currentTimeMillis();
-		GFStatesItem first = sgf.GenerateGFState(sd.macsTree, p, time_k);
+		GFStatesItem first = sgf.GenerateGFState(sd.getMacsTree(), p, time_k);
 		dtEnd = System.currentTimeMillis();
 		Configuration.time_hmm+=dtEnd-dtStart;
 		if(null==first) {
@@ -90,7 +83,7 @@ public class Predictor {
 			
 			// get relax micro state from grid
 			dtStart = System.currentTimeMillis();
-			ArrayList<RelaxMicroState> rf = grid.forwardQueryMics(sd.micsLevel);
+			ArrayList<RelaxMicroState> rf = grid.forwardQueryMics(sd.getMicsLevel());
 			dtEnd = System.currentTimeMillis();
 			Configuration.time_retrieve+=dtEnd-dtStart;
 			//System.out.println("for debug time_k:"+time_k+" RelaxMicroStates size:"+rf.size());
@@ -109,7 +102,7 @@ public class Predictor {
 			
 			
 			dtStart = System.currentTimeMillis();
-			GFStatesItem sec = sgf.GenerateGFState(sd.macsTree, p, time_k);// Following prediction
+			GFStatesItem sec = sgf.GenerateGFState(sd.getMacsTree(), p, time_k);// Following prediction
 			dtEnd = System.currentTimeMillis();
 			Configuration.time_hmm+=dtEnd-dtStart;
 			
@@ -163,7 +156,7 @@ public class Predictor {
 
 		// prediction at time k==1
 		time_k++;
-		GFStatesItem first = sgf.GenerateGFState(sd.macsTree, p, time_k);
+		GFStatesItem first = sgf.GenerateGFState(sd.getMacsTree(), p, time_k);
 		if(null==first){
 			return sgf;
 		}
@@ -180,17 +173,17 @@ public class Predictor {
 				
 				// as reuse, should go ahead. In data generation, the time start from 1, where reuseSD start to 
 				//store data from 0, therefore, time_k just go head
-				reuseMics = inReuseSDs.get(time_k ).micsLevel;
+				reuseMics = inReuseSDs.get(time_k ).getMicsLevel();
 			}
 
-			ArrayList<MicroState> nextMics = forwardQeryMicsReuse(sd.micsLevel,
+			ArrayList<MicroState> nextMics = forwardQeryMicsReuse(sd.getMicsLevel(),
 					reuseMics, g, ac, r);
 
 			sd = ac.getDendrogramMics(nextMics, r);// get dendrogram
 			if (null != outSDList) {
 				outSDList.add(sd);
 			}
-			GFStatesItem sec = sgf.GenerateGFState(sd.macsTree, p, time_k);// follwing // prediction
+			GFStatesItem sec = sgf.GenerateGFState(sd.getMacsTree(), p, time_k);// follwing // prediction
 			if(null==sec) break;
 			sgf.gfStates.addStatesItem(sec);
 		}
@@ -483,7 +476,7 @@ public class Predictor {
 			double minDelta, double r){
 		ArrayList<Entry<Long, GridLeafTraHashItem>>  queryFirst=g.queryRangeTimeSeqCells(inRecentPath);
 		if(null==queryFirst||queryFirst.size()==0) return null;
-		 StateGridFilter sgf=PathPrediction(queryFirst, g,p,minDelta,r);
+		 StateGridFilter sgf= predictPath(queryFirst, g, p, minDelta, r);
 		 
 		 return sgf;
 	}

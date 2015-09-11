@@ -14,11 +14,7 @@ public class MacroState extends State{
 		super(id,ms1);
 	}
 	
-	
-	/**
-	 * merge two state
-	 * @param ms
-	 */
+
 	public void addMacroState(State ms){
 		super.addState(ms);
 	}
@@ -67,7 +63,7 @@ public class MacroState extends State{
 		ms.addMacroState(m2);
 		
 		System.out.println(ms.getRadius()+" "+ms.getCenter()[0]+" "+ms.getCenter()[1]);
-		System.out.println(ms.getRadius(m1,m2));
+		System.out.println(getRadius(m1, m2));
 		
 		MacroState ms1=new MacroState(1);
 		ms1.addMacroState(m1);

@@ -28,10 +28,6 @@ public class TraStore {
 	
 	/**
 	 * query the trajectory by trajectory id, trajectory off and future trajectory off
-	 * @param traId
-	 * @param off
-	 * @param deltaOff
-	 * @return
 	 */
 	public ArrayList<TraStoreListItem> queryTraByOff(TraListItem traInfo, int deltaOff){
 		
@@ -66,9 +62,6 @@ public class TraStore {
 	 * special noted: the traInfo do not provide the useful information for future prediction, 
 	 * therefore, we do not 
 	 * include this offset into reference trajectories parts
-	 * @param traInfo
-	 * @param deltaTime
-	 * @return
 	 */
 	public ArrayList<TraStoreListItem> queryTraByTime(TraListItem traInfo, int deltaTime){
 		ArrayList<TraStoreListItem> resTraList=new ArrayList<TraStoreListItem>();
@@ -96,9 +89,8 @@ public class TraStore {
 				
 				double midLat=(tsi.lat-preTsi.lat)*frac+preTsi.lat;
 				double midLng=(tsi.lng-preTsi.lng)*frac+preTsi.lng;
-				int midTime=stopTime;//(tsi.timestamp+preTsi.timestamp)/2;
-				
-				TraStoreListItem midTsi=new TraStoreListItem(midLat,midLng,midTime);
+
+                TraStoreListItem midTsi=new TraStoreListItem(midLat,midLng, stopTime);
 				resTraList.add(midTsi);
 				break;
 			}

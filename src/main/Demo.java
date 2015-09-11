@@ -24,15 +24,15 @@ public class Demo {
 
 	public static void main(String args[]){
 		
-			expPredictionErr_R2D2();
+			run();
 
 	}
 		
 	
 //=================================method for R2-D2===================================================
-	public static void expPredictionErr_R2D2(){
+	public static void run(){
 		
-		Predictor pdr=new Predictor();
+		Predictor predictor=new Predictor();
 		Configuration.BITS_PER_GRID=4;
 		Configuration.MAX_LEVEL=3;
 
@@ -95,7 +95,7 @@ public class Demo {
 
 			 if(null==testBres||testBres.size()<Configuration.TraSupport) continue;
 			
-			 StateGridFilter sgf=pdr.PathPrediction(testBres,g,Configuration.ProDown,Configuration.MAPPro,Configuration.MicroStateRadius);
+			 StateGridFilter sgf=predictor.predictPath(testBres, g, Configuration.ProDown, Configuration.MAPPro, Configuration.MicroStateRadius);
 			 ArrayList<MacroState> mp=sgf.gfStates.getMacroStatePath();
 
             int len=mp.size()-1;

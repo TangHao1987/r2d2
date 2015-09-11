@@ -23,7 +23,7 @@ public class MoveObjCacheBBFOld {
 	 * @param inTu
 	 */
 	public MoveObjCacheBBFOld(Grid inGrid){
-		moc=new HashMap<Integer,MOTuple>();
+		moc=new HashMap<>();
 
 		grid=inGrid;
 		
@@ -34,14 +34,11 @@ public class MoveObjCacheBBFOld {
 	
 	public void setSample(int [] sa,int sl,int inStartTime,int inEndTime){
 		sampleLen=sl;
-		sampleGridHashList=new HashMap<Integer,ArrayList<RoICell>>();
-		sampleLocHashList=new HashMap<Integer,ArrayList<Point>>();
+		sampleGridHashList=new HashMap<>();
+		sampleLocHashList=new HashMap<>();
 		for(int i:sa){
-			ArrayList<RoICell> item=new ArrayList<RoICell>();
-			sampleGridHashList.put(i, item);
-			
-			ArrayList<Point> locItem=new ArrayList<Point>();
-			sampleLocHashList.put(i, locItem);
+			sampleGridHashList.put(i, new ArrayList<RoICell>());
+			sampleLocHashList.put(i, new ArrayList<Point>());
 		}
 		
 		sampleStartTime=inStartTime;
@@ -113,45 +110,45 @@ public class MoveObjCacheBBFOld {
 				lng1=moTuple.getLng();
 				t1=moTuple.getTimestamp();
 				
-				double voc_lat=(inLat-lat1)/ti;
-				double voc_lng=(inLng-lng1)/ti;
-				
+				double velocityLat=(inLat-lat1)/ti;
+				double velocityLng=(inLng-lng1)/ti;
+
 				//outlier, ignore this update
 			//	if(Math.abs(voc_lat)>Configuration.TaxiExtremVelocityLat||Math.abs(voc_lng)>Configuration.TaxiExtremVelocityLng){
 			//		return;
 			//	}
-				
+
+
 				int ts=Configuration.T_Sample;//count the time
-				
-				while(ts<=ti){
-								
-				 lat2=voc_lat*Configuration.T_Sample+lat1;
-				 lng2=voc_lng*Configuration.T_Sample+lng1;
-				 t2=Configuration.T_Sample+t1;
+                //Mock up the missing sample point by using the average velocities whenever the sample size is greater than 1
+                while (ts <= ti) {
 
-				//transfer to the coordination in x-y grid map
-				java.awt.Point p2=MapLoc2Grid.getPoint(lat2, lng2);
-				java.awt.Point p1=MapLoc2Grid.getPoint(lat1, lng1);
-				
+                    lat2 = velocityLat * Configuration.T_Sample + lat1;
+                    lng2 = velocityLng * Configuration.T_Sample + lng1;
+                    t2 = Configuration.T_Sample + t1;
 
-				
-				grid.updateLineTra(p1.x,p1.y,t1, p2.x, p2.y, t2, inTraId);//update the line to grid
-				
-				if(this.sampleStartTime==-1||this.sampleEndTime==-1||(t1>=sampleStartTime&&t1<=sampleEndTime)){
-				insertSampleGrid( p1, inTraId);
-				
-				Point loc1=new Point(inLat,inLng);
-				insertSampleLoc(loc1,inTraId);
-				}
-				
-				
-				 lat1=lat2;
-				 lng1=lng2;
-				 t1=t2;
-				 ts+=Configuration.T_Sample;
-				}
-				
-				moTuple.setNewTuple(lat2,lng2, t2);//update the cache 
+                    //transfer to the coordination in x-y grid map
+                    java.awt.Point p2 = MapLoc2Grid.getPoint(lat2, lng2);
+                    java.awt.Point p1 = MapLoc2Grid.getPoint(lat1, lng1);
+
+
+                    grid.updateLineTra(p1.x, p1.y, t1, p2.x, p2.y, t2, inTraId);//update the line to grid
+
+                    if (this.sampleStartTime == -1 || this.sampleEndTime == -1 || (t1 >= sampleStartTime && t1 <= sampleEndTime)) {
+                        insertSampleGrid(p1, inTraId);
+
+                        Point loc1 = new Point(inLat, inLng);
+                        insertSampleLoc(loc1, inTraId);
+                    }
+
+
+                    lat1 = lat2;
+                    lng1 = lng2;
+                    t1 = t2;
+                    ts += Configuration.T_Sample;
+                }
+
+                moTuple.setNewTuple(lat2,lng2, t2);//update the cache
 			}
 		}
 		
